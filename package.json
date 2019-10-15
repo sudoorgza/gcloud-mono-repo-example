@@ -1,0 +1,92 @@
+{
+  "name": "gcloud-mono-repo-example",
+  "version": "1.0.0",
+  "description": "Example repo on how to use yarn workspaces together with the gcloud deploy. Adapted from git@github.com:tommedema/serverless-mono-example.git",
+  "main": "index.js",
+  "repository": "git@github.com:sudoorgza/mono-repo-example",
+  "author": "Hendrik J. Schalekamp <carnun@sudo.org.za>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "deploy-module0/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "deploy-module0/**"
+    ]
+  },
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "husky": "^3.0.9",
+    "lerna": "^3.17.0",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "replace-in-file": "^4.1.3",
+    "rimraf": "^3.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.0.1"
+  },
+  "scripts": {
+    "add:module": "cp -r ./templates/deploy-module",
+    "add:app": "cp -r ./templates/app",
+    "add:package": "cp -r ./templates/package/",
+    "build": "yarn build:packages&&yarn build:deployables",
+    "build:packages": "tsc -b ./packages",
+    "build:deployables": "tsc -b ./deploy-module0",
+    "watch": "tsc -b -w ./packages",
+    "test": "lerna run test --stream",
+    "deploy": "lerna run deploy --stream",
+    "lint": "tslint --fix --project ./tsconfig.lint.json",
+    "prettier": "prettier --write --no-semi --single-quote",
+    "clean": "yarn clean:dist && yarn clean:logs && yarn clean:deps",
+    "clean:dist": "rimraf **/dist && rimraf **/tsconfig.tsbuildinfo",
+    "clean:deps": "rimraf **/yarn.lock&&rimraf **/node_modules",
+    "clean:logs": "rimraf **/*.log"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/src/*.{js}": [
+      "prettier --write --parser typescript",
+      "git add"
+    ],
+    "*.{json}": [
+      "prettier --write --parser json",
+      "git add"
+    ],
+    "*.{css}": [
+      "prettier --write --parser css",
+      "git add"
+    ],
+    "*.{md}": [
+      "prettier --write --parser markdown",
+      "git add"
+    ],
+    "*.{scss}": [
+      "prettier --write --parser scss",
+      "git add"
+    ],
+    "*.{yml}": [
+      "prettier --write --parser yaml",
+      "git add"
+    ],
+    "**/test/*.{ts,js,spec.ts}": [
+      "prettier --write --parser typescript",
+      "git add"
+    ],
+    "packages/**/src/*.{ts,js,spec.ts}": [
+      "prettier --write --parser typescript",
+      "git add"
+    ],
+    "deploy-module0/**/src/*.ts": [
+      "prettier --write --parser typescript",
+      "yarn run lint",
+      "git add"
+    ]
+  }
+}

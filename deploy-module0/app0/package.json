@@ -1,0 +1,33 @@
+{
+  "name": "app0",
+  "version": "1.0.0",
+  "description": "A serverless service that returns a package0 number.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "author": "Hendrik J. Schalekamp",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "install": "cp package.json package.dev.json&&grep -v @0local package.json > package.deploy.json",
+    "build": "rimraf dist&&tsc -b",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.spec.ts\"",
+    "deploy:cmd": "gcloud beta functions deploy app0 --quiet --runtime nodejs10 --entry-point=app0 --trigger-http --max-instances=1",
+    "pre-deploy": "cross-var node ../../scripts/rename-import.js $PWD/dist/**/*.js&&cp -r ../../node_modules/@0local/ ./dist/packages&&rm -f tsconfig.tsbuildinfo",
+    "deploy": "yarn pre-deploy&&cp package.json package.json.bak;cp package.deploy.json package.json;yarn deploy:cmd;cp package.dev.json package.json"
+  },
+  "dependencies": {
+    "@0local/package0": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^12.7.12",
+    "cross-var": "^1.1.0",
+    "mocha": "^6.2.1",
+    "rimraf": "^3.0.0",
+    "ts-node": "^8.4.1",
+    "tsconfig-paths": "^3.5.0",
+    "typescript": "^3.0.1"
+  }
+}

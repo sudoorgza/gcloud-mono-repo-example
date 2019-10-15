@@ -1,0 +1,30 @@
+{
+  "name": "new-name",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "author": "carnun",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "install": "cp package.json package.dev.json&&grep -v @0local package.json > package.deploy.json",
+    "build": "rimraf dist&&tsc -b",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.spec.ts\"",
+    "pre-deploy": "cp -r ../../node_modules/@0local/* ./dist/packages&&cross-var node ../../scripts/index.js $PWD/dist/**/*.js&&rm -f tsconfig.tsbuildinfo",
+    "deploy:cmd": "echo \"add your deploy command here\"",
+    "deploy": "yarn pre-deploy&&cp package.json package.json.bak;cp package.deploy.json package.json;yarn deploy:cmd;cp package.dev.json package.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^12.7.12",
+    "mocha": "^6.2.1",
+    "rimraf": "^3.0.0",
+    "ts-node": "^8.4.1",
+    "tsconfig-paths": "^3.5.0",
+    "typescript": "^3.0.1"
+  }
+}

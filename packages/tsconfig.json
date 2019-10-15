@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.settings.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./package0"
+    }
+  ]
+}
